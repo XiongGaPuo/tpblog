@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>后台登录页面</title>
+    <link rel="shortcut icon" href="/static/admin/img/logo.jpg" type="image/x-icon">
+    <link href="/static/admin/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/static/admin/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/static/admin/css/weather-icons.min.css" rel="stylesheet" />
+    <link id="beyond-link" href="/static/admin/css/beyond.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="login-container">
+    <div class="loginbox bg-white">
+        <div class="loginbox-title">密码找回</div>
+
+        <div class="loginbox-or">
+            <div class="or-line"></div>
+        </div>
+        <form action="">
+            <div class="loginbox-textbox">
+                <input type="text" class="form-control" name="email" placeholder="请输入您的邮箱" />
+            </div>
+
+            <div class="loginbox-submit">
+                <input type="submit" class="btn btn-primary btn-block" id="sendCode" value="发送验证码">
+            </div>
+
+            <div class="loginbox-textbox hidden">
+                <input type="text" class="form-control" name="code" placeholder="验证码" />
+            </div>
+
+            <div class="loginbox-submit hidden">
+                <input type="submit" class="btn btn-primary btn-block" id="verify" value="验证">
+            </div>
+
+            <div class="loginbox-textbox hidden" >
+                <input type="password" class="form-control" name="password" placeholder="填写密码" />
+            </div>
+            <div class="loginbox-textbox hidden" >
+                <input type="password" class="form-control" name="conpass" placeholder="确认密码">
+            </div>
+
+            <div class="loginbox-submit hidden">
+                <input type="submit" class="btn btn-primary btn-block" id="reset" value="重置密码">
+            </div>
+        </form>
+        <div class="loginbox-signup">
+            <a href="{:url('admin/index/login')}">返回登录页面</a>
+        </div>
+    </div>
+    <div class="logobox">
+        <p class="text-center">项目制作人:
+            <a class="text-center"  href="https://github.com/XiongGaPuo">XiongGaPuo</a>
+        </p>
+    </div>
+</div>
+
+<script src="/static/admin/js/skins.min.js"></script>
+<!--Basic Scripts-->
+<script src="/static/admin/js/jquery.min.js"></script>
+<script src="/static/admin/js/bootstrap.min.js"></script>
+<script src="/static/admin/js/slimscroll/jquery.slimscroll.min.js"></script>
+<!--Beyond Scripts-->
+<script src="/static/admin/js/beyond.js"></script>
+<script src="/static/lib/layer/layer.js"></script>
+<script>
+    $(window).bind("load", function () {
+
+        /*Sets Themed Colors Based on Themes*/
+        themeprimary = getThemeColorFromCss('themeprimary');
+        themesecondary = getThemeColorFromCss('themesecondary');
+        themethirdcolor = getThemeColorFromCss('themethirdcolor');
+        themefourthcolor = getThemeColorFromCss('themefourthcolor');
+        themefifthcolor = getThemeColorFromCss('themefifthcolor');
+
+    });
+
+    $(function(){
+        $('#sendCode').click(function(){
+            $.ajax({
+                url:"{:url('admin/index/sendCode')}",
+                type:'post',
+                data:$('form').serialize(),
+                dataType:'json',
+                success:function (data) {
+                    console.log(data);
+                    if(data.code == 1){
+                        layer.msg(data.msg,{
+                            icon:6,  //笑脸
+                            time:2000 //持续时长
+
+                        },function () {
+                            $('[name=email]').parent().addClass('hidden');
+                            $('[name=code]').parent().removeClass('hidden');
+                            $('#sendCode').parent().addClass('hidden');
+                            $('#verify').parent().removeClass('hidden');
+                        });
+
+                    }else {
+                        layer.open({
+                            title:'发送失败',
+                            content:data.msg, //返回data中的Msg信息
+                            icon:5, //哭脸
+                            anim:6 //左右抖动
+                        });
+                    }
+                }
+
+            });
+
+            return false;
+        });
+
+        $('#verify').click(function(){
+            $.ajax({
+                url:"{:url('admin/index/verify')}",
+                type:'post',
+                data:$('form').serialize(),
+                dataType:'json',
+                success:function (data) {
+                    if(data.code == 1){
+                        layer.msg(data.msg,{
+                            icon:6,
+                            time:2000
+                        },function () {
+                            $('[name=code]').parent().addClass('hidden');
+                            $('#verify').parent().addClass('hidden');
+                            $('[name=password]').parent().removeClass('hidden');
+                            $('[name=conpass]').parent().removeClass('hidden');
+                            $('#reset').parent().removeClass('hidden');
+                        })
+                    }else{
+                        layer.open({
+                            title:'验证失败',
+                            content:data.msg, //返回data中的Msg信息
+                            icon:5, //哭脸
+                            anim:6 //左右抖动
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+
+        $('#reset').click(function () {
+            $.ajax({
+                url:"{:url('admin/index/reset')}",
+                type:'post',
+                data:$('form').serialize(),
+                dataType:'json',
+                success:function (data) {
+                    if(data.code == 1){
+                        layer.msg(data.msg,{
+                            icon:6,
+                            time:2000
+
+                        },function () {
+                            location.href = data.url;
+                        });
+                    }else {
+                        layer.open({
+                            title:'重置密码失败',
+                            content:data.msg, //返回data中的Msg信息
+                            icon:5, //哭脸
+                            anim:6 //左右抖动
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+<!--  /Body -->
+</html>

@@ -59,4 +59,52 @@ class Admin extends Model
         }
     }
 
+    public function sendCode($data){
+        $validate = new \app\common\validate\Admin();
+        if(!$validate->scene('sendCode')->check($data)){
+            return $validate->getError();
+        }else{
+            $result = $this->where('email',$data['email'])->find();
+            if ($result){
+                $code = mt_rand(1000,9999);
+                session('code',$code);
+                mailto($data['email'], '重置密码验证码', '重置的验证码是'.$code);
+                return 1;
+            }else{
+                return '没有这个邮箱存在';
+            }
+
+        }
+
+
+    }
+
+    public function verify($data){
+        $validate = new \app\common\validate\Admin();
+        if(!$validate->scene('verify')->check($data)){
+            return $validate->getError();
+        }else if($data['code'] != session('code')){
+            return "验证码不正确";
+        }else{
+            return 1;
+        }
+
+    }
+
+    public function reset($data){
+        $validate = new \app\common\validate\Admin();
+        if(!$validate->scene('reset')->check($data)){
+            return $validate->getError();
+        }else{
+            $adminInfo = $this->where('email',$data['email'])->find();
+            $adminInfo->password=$data['password'];
+            $result = $adminInfo->save();
+            $content = "<br>您的账号是:{$adminInfo['username']},密码是:{$adminInfo['password']}";
+            mailto($adminInfo['email'],'恭喜您密码重置成功',$content);
+            return 1;
+        }
+    }
+
+
+
 }

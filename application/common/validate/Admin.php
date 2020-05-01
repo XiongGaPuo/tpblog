@@ -11,15 +11,17 @@ class Admin extends Validate
 {
     //验证规则,这里只验证内容是否为空
     protected $rule = [
-        'username|管理员账户' => 'require',
-        'password|密码' => 'require',
+        'username|管理员账户' => 'require|max:25',
+        'password|密码' => 'require|min:6|max:25',
 
         //confirm验证 , 验证这条数据的值是否和confirm:输入的某条数据一致
         'conpass|确认密码'=>'require|confirm:password',
-        'nickname|昵称' => 'require',
+        'nickname|昵称' => 'require|max:25',
 
         //email验证 是否为@邮箱格式
-        'email|邮箱' =>'require|email'
+        'email|邮箱' =>'require|email',
+
+        'code|验证码'=>'require'
     ];
 
     //登录验证场景
@@ -31,6 +33,23 @@ class Admin extends Validate
 
     //注册场景验证
     public function sceneRegister(){
-        return $this->only(['username','password','conpass','nickname','email']);
+        return $this->only(['username','password','conpass','nickname','email'])
+        ->append(['username'=>'unique:admin','nickname'=>'unique:admin','email'=>'unique:admin']);//追加规则,unique唯一的, admin数据表里的unique
+    }
+
+    //发送邮箱验证
+    public function sceneSendCode(){
+
+        return $this->only(['email']);
+    }
+
+    //验证码验证
+    public function sceneVerify(){
+        return $this->only(['code']);
+    }
+
+    //重置密码验证
+    public function sceneReset(){
+        return $this->only(['password','conpass']);
     }
 }

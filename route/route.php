@@ -12,4 +12,7 @@
 Route::group('admin',function(){
     Route::rule('/','admin/index/login','get|post');
     Route::rule('register','admin/index/register','get|post');
+    Route::rule('sendCode','admin/index/sendCode','get|post');
+    Route::rule('verify','admin/index/verify','get|post');
+    Route::rule('reset','admin/index/reset','get|post');
 });
