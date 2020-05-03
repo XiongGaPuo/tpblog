@@ -23,6 +23,7 @@ class Admin extends Model
 
         //在数据库admin表单中查询有无对应的账号密码
         $result=$this->where($data)->find();
+
         if ($result){
             //判断用户是否可用
             if($result['status'] != 1){
@@ -32,7 +33,8 @@ class Admin extends Model
             $sessionData=[
                 'id' => $result['id'],
                 'nickname' => $result['nickname'],
-                'is_super' => $result['is_super']
+                'is_super' => $result['is_super'],
+                'is_super' => $result['email'],
             ];
             session('admin',$sessionData);
             //1表示有这个用户,也就是用户名和密码正确了
@@ -86,6 +88,7 @@ class Admin extends Model
         }else if($data['code'] != session('code')){
             return "验证码不正确";
         }else{
+            session('code',null);
             return 1;
         }
 
