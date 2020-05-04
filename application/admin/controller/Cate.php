@@ -9,7 +9,7 @@ class Cate extends Base
 
         //查询数据库数据
 
-        $cates = model('Cate')->order('sort','asc')->paginate(10);
+        $cates = model('Cate')->order('sort','asc')->paginate(1);
         //定义一个模板数据变量
         $viewDate= [
             'cates'=>$cates
@@ -76,8 +76,8 @@ class Cate extends Base
 
     //栏目删除
     public function del(){
-        $cateInfo = model('Cate')->find(input('post.id'));
-        $result = $cateInfo->delete();
+        $cateInfo = model('Cate')->with('article')->find(input('post.id'));
+        $result = $cateInfo->together('article')->delete();
         if ($result){
             $this->success('栏目删除成功','admin/cate/lists');
         }else{

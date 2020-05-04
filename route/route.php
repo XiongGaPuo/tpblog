@@ -29,4 +29,20 @@ Route::group('admin',function(){
 
     Route::rule('article/lists','admin/article/lists','get');
     Route::rule('article/add','admin/article/add','get|post');
+    Route::rule('article/top','admin/article/top','get|post');
+    Route::rule('article/edit/[:id]','admin/article/edit','get|post');
+    Route::rule('article/del','admin/article/del','post');
+
+    Route::rule('member/lists','admin/member/lists','get');
+    Route::rule('member/add','admin/member/add','get|post');
+    Route::rule('member/edit/[:id]','admin/member/edit','get|post');
+    Route::rule('member/del','admin/member/del','post');
+
+    Route::rule('admin/lists','admin/admin/lists','get');
+    Route::rule('admin/add','admin/admin/add','get|post');
+    Route::rule('admin/edit/[:id]','admin/admin/edit','get|post');
+    Route::rule('admin/del','admin/admin/del','post');
+    Route::rule('admin/super','admin/admin/super','post');
+    Route::rule('admin/status','admin/admin/status','post');
+
 });

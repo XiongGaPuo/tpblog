@@ -11,41 +11,45 @@
             <div class="page-breadcrumbs">
                 <ul class="breadcrumb">
                     <li class="active">
-                        <i class="fa fa-home"></i>&nbsp;栏目管理
+                        <i class="fa fa-home"></i>&nbsp;会员管理
                     </li>
-                    <li>栏目列表</li>
+                    <li>会员列表</li>
                 </ul>
             </div>
             <!-- /Page Breadcrumb -->
             <!-- Page Body -->
             <div class="page-body">
-                <a href="{:url('admin/cate/add')}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp;栏目添加</a>
+                <a href="{:url('admin/member/add')}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp;会员添加</a>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="widget">
                             <div class="widget-header">
-                                <span class="widget-caption">栏目列表</span>
+                                <span class="widget-caption">会员列表</span>
                                 <div class="widget-buttons">
-                                    {$cates->render()|raw|replace}
+                                    {$members->render()|raw|replace}
                                 </div>
                             </div>
                             <div class="widget-body">
                                 <table class="table table-hover table-bordered">
                                     <thead>
                                     <tr>
-                                        <th>排序</th>
-                                        <th>栏目名称</th>
+                                        <th>创建时间</th>
+                                        <th>会员名称</th>
+                                        <th>昵称</th>
+                                        <th>邮箱</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                     {volist name="cates" id="cate"}
+                                     {volist name="members" id="member"}
                                         <tr>
-                                            <td><input type="text" name="sort" dataid="{$cate.id}" size="1" value="{$cate.sort}"></td>
-                                            <td>{$cate.catename}</td>
+                                            <td>{$member.create_time}</td>
+                                            <td>{$member.username}</td>
+                                            <td>{$member.nickname}</td>
+                                            <td>{$member.email}</td>
                                             <td>
-                                                <a href="{:url('admin/cate/edit',['id'=>$cate.id])}" class="btn btn-azure btn-xs">编辑</a>
-                                                <a href="#" class="btn btn-danger btn-xs cate-del" dataid="{$cate.id}">删除</a>
+                                                <a href="{:url('admin/member/edit',['id'=>$member.id])}" class="btn btn-azure btn-xs">编辑</a>
+                                                <a href="#" class="btn btn-danger btn-xs member-del" dataId="{$member.id}">删除</a>
                                             </td>
                                         </tr>
                                      {/volist}
@@ -71,45 +75,16 @@
     $(function () {
         $('.pagination').addClass('pagination-sm');
 
-        $('input[name=sort]').change(function () {
-            var id =$(this).attr('dataid');
-            var sort = $(this).val();
-            $.ajax({
-                url:"{:url('admin/cate/sort')}",
-                type:"post",
-                data:{id:id,sort:sort},
-                dataType:'json',
-                success:function (data) {
-                    console.log(data);
-                    if(data.code == 1 ){
-                        layer.msg(data.msg,{
-                            icon:6,
-                            time:2000
-                        },function () {
-                            location.href=data.url
-                        })
-                    }else {
-                        layer.open({
-                            title:'排序失败',
-                            content:data.msg,
-                            icon: 5,
-                            anim:6
-                        })
-                    }
-                }
-            });
-            return false;
-        });
 
-        $('.cate-del').click(function () {
-            var id = $(this).attr('dataid');
+        $('.member-del').click(function () {
+            var id = $(this).attr('dataId');
             layer.confirm('确定删除吗',{
-                title:'删除栏目',
+                title:'删除会员',
                 icon:3,
             },function (index) {
                 layer.close(index);
                 $.ajax({
-                    url:"{:url('admin/cate/del')}",
+                    url:"{:url('admin/member/del')}",
                     type:'post',
                     data:{id:id},
                     dataType:'json',
@@ -127,7 +102,7 @@
                                 content:data.msg,
                                 icon:5,
                                 anim:6
-                            })
+                            });
                         }
 
                     }
@@ -135,7 +110,7 @@
                 });
             });
             return false;
-        })
+        });
     })
 </script>
 </body>

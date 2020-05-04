@@ -10,18 +10,6 @@ class Home extends Base
         return view();
     }
 
-    public function Welcome(){
-        return view();
-    }
-
-    public function admin_info(){
-        return view();
-    }
-
-    public function menu(){
-        return view();
-    }
-
     public function out(){
         session('admin',null);
         $this->redirect('admin/index/login');

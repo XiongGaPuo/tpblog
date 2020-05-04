@@ -13,6 +13,7 @@ class Admin extends Model
     //只读字段
     protected $readonly = ['email'];
 
+
     public function login($data){
 
         $validate = new \app\common\validate\Admin();
@@ -105,6 +106,64 @@ class Admin extends Model
             $content = "<br>您的账号是:{$adminInfo['username']},密码是:{$adminInfo['password']}";
             mailto($adminInfo['email'],'恭喜您密码重置成功',$content);
             return 1;
+        }
+    }
+
+    public function add($data){
+        $validate = new \app\common\validate\Admin();
+        if (!$validate->scene('add')->check($data)){
+            return $validate->getError();
+        }
+
+        $result = $this->allowField(true)->save($data);
+        if ($result){
+            return 1;
+        }else{
+            return '会员添加失败';
+        }
+
+    }
+
+    public function edit($data){
+        $validate = new \app\common\validate\Admin();
+        if(!$validate->scene('edit')->check($data)){
+            return $validate->getError();
+        }
+
+        $admin = $this->find($data['id']);
+        if($admin['password']!=$data['oldpassword']){
+            return '原密码不正确';
+        }
+        $result = $admin->allowField(true)->save($data);
+        if ($result){
+            return 1;
+        }
+        else{
+            return '管理员修改失败';
+        }
+    }
+
+    public function status($data){
+
+        $adminInfo = $this->find($data['id']);
+        $adminInfo->status = $data['status'];
+        $result = $adminInfo->save();
+        if ($result){
+            return 1;
+        }else{
+            return '操作失败';
+        }
+    }
+
+    public function super($data){
+
+        $adminInfo = $this->find($data['id']);
+        $adminInfo->is_super = $data['is_super'];
+        $result = $adminInfo->save();
+        if ($result){
+            return 1;
+        }else{
+            return '操作失败';
         }
     }
 

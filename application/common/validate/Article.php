@@ -22,6 +22,11 @@ class Article extends Validate
             'desc','content']);
     }
 
+    public function sceneEdit(){
+        return $this->only(['title','tags','cate_id',
+            'desc','content']);
+    }
+
 
 
 

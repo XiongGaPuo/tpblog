@@ -1,0 +1,132 @@
+{include file="public/_head" /}
+<!-- Main Container -->
+<div class="main-container container-fluid">
+    <!-- Page Container -->
+    <div class="page-container">
+
+        {include file="public/_left" /}
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Breadcrumb -->
+            <div class="page-breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="fa fa-home"></i>&nbsp;管理员管理
+                    </li>
+                    <li>管理员编辑</li>
+                </ul>
+            </div>
+            <!-- /Page Breadcrumb -->
+            <!-- Page Body -->
+            <div class="page-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="widget radius-bordered">
+                            <div class="widget-header bordered-bottom bordered-themeprimary">
+                                <span class="widget-caption">管理员编辑</span>
+                            </div>
+                            <div class="widget-body">
+                                <form class="form-horizontal">
+                                    <input type="hidden" name="id" value="{$adminInfo.id}">
+                                    <div class="form-group">
+                                        <label for="username" class="col-sm-2 control-label no-padding-right">用户名</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" value="{$adminInfo.username}" class="form-control" name="username" id="username" placeholder="用户名" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="oldpassword" class="col-sm-2 control-label no-padding-right">原密码</label>
+                                        <div class="col-sm-6">
+                                            <input type="text"  class="form-control" value="" name="oldpassword" id="oldpassword" placeholder="原密码" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password" class="col-sm-2 control-label no-padding-right">新密码</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" value="" name="password" id="password" placeholder="新密码" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nickname" class="col-sm-2 control-label no-padding-right">名称</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" value="{$adminInfo.nickname}" class="form-control" name="nickname" id="nickname" placeholder="名称" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email" class="col-sm-2 control-label no-padding-right">邮箱</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" value="{$adminInfo.email}" class="form-control" name="email" id="email" placeholder="邮箱" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox col-sm-offset-2 col-sm-6" >
+                                            <label>
+                                                <input type="checkbox" name="status" {if $adminInfo.status == 1 }checked{/if} value="1">
+                                                <span class="text">是否启动</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" name="is_super"  {if $adminInfo.is_super == 1 }checked{/if} value="1">
+                                                <span class="text">是否为超级管理员</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button type="submit" class="btn btn-primary" id="adminEdit">编辑</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Page Body -->
+        </div>
+        <!-- /Page Content -->
+
+    </div>
+    <!-- /Page Container -->
+    <!-- Main Container -->
+
+</div>
+
+{include file="public/_js"/}
+<script>
+    $(function () {
+
+        $('#adminEdit').click(function () {
+            $.ajax({
+                url:"{:url('admin/admin/edit')}",
+                type:"post",
+                data:$('form').serialize(),
+                dataType:'json',
+                success:function (data) {
+                    console.log(data);
+                    if (data.code == 1) {
+                        layer.msg(data.msg,{
+                            icon:6,
+                            time:2000
+                        },function () {
+                            location.href = data.url;
+                        });
+                    }else{
+                        layer.open({
+                            title:"管理员编辑失败",
+                            content:data.msg,
+                            icon: 5,
+                            anim:6
+                        });
+                    }
+                }
+            });
+
+
+            return false;
+        })
+    })
+</script>
+</body>
+<!--  /Body -->
+</html>

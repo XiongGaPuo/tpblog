@@ -10,21 +10,21 @@
             <div class="page-breadcrumbs">
                 <ul class="breadcrumb">
                     <li>
-                        <i class="fa fa-home"></i>&nbsp;文章管理
+                        <i class="fa fa-home"></i>&nbsp;管理员管理
                     </li>
-                    <li>文章列表</li>
+                    <li>管理员列表</li>
                 </ul>
             </div>
             <!-- Page Body -->
             <div class="page-body">
-                <a href="{:url('admin/article/add')}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp;添加文章</a>
+                <a href="{:url('admin/admin/add')}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp;添加管理员</a>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="widget">
                             <div class="widget-header">
-                                <span class="widget-caption">文章列表</span>
+                                <span class="widget-caption">管理员列表</span>
                                 <div class="widget-buttons">
-                                    {$articles->render()|raw|replace}
+                                    {$admins->render()|raw|replace}
                                 </div>
                             </div>
                             <div class="widget-body">
@@ -32,23 +32,29 @@
                                     <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>文章标题</th>
-                                        <th>所属导航</th>
-                                        <th>推荐</th>
+                                        <th>用户名</th>
+                                        <th>昵称</th>
+                                        <th>邮箱</th>
+                                        <th>状态</th>
+                                        <th>是否为超级管理员</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
-                                    {volist name="articles" id="article"}
+                                    {volist name="admins" id="admin"}
                                         <tr>
-                                            <td>{$article.id}</td>
-                                            <td>{$article.title}</td>
-                                            <td>{$article.cate.catename}</td>
-                                            <td >{if $article.is_top == 1}<p class="btn btn-sm btn-blue article-top" isTop="{$article.is_top}" dataId="{$article.id}">已推荐
-                                                </p>{else /}<p class="btn btn-sm article-top" isTop="{$article.is_top}" dataId="{$article.id}" >未推荐</p>{/if}</td>
-
+                                            <td>{$admin.id}</td>
+                                            <td>{$admin.username}</td>
+                                            <td>{$admin.nickname}</td>
+                                            <td>{$admin.email}</td>
+                                            <td >{if $admin.status == 1}<p class="btn btn-sm btn-blue admin-status" isStatus="{$admin.status}" dataId="{$admin.id}">开启
+                                                </p>{else /}<p class="btn btn-sm admin-status" isStatus="{$admin.status}" dataId="{$admin.id}" >未启动</p>{/if}
+                                            </td>
+                                            <td >{if $admin.is_super == 1}<p class="btn btn-sm btn-blue admin-super" isSuper="{$admin.is_super}" dataId="{$admin.id}">超级管理员
+                                            </p>{else /}<p class="btn btn-sm admin-super" isSuper="{$admin.is_super}" dataId="{$admin.id}" >普通管理员</p>{/if}
+                                            </td>
                                             <td>
-                                                <a href="{:url('admin/article/edit',['id'=>$article.id])}" class="btn btn-sm btn-warning">编辑</a>
-                                                <a href="#"  class="btn btn-sm btn-danger article-del" dataId="{$article.id}" >删除</a>
+                                                <a href="{:url('admin/admin/edit',['id'=>$admin.id])}" class="btn btn-sm btn-warning">编辑</a>
+                                                <a href="#"  class="btn btn-sm btn-danger admin-del" dataId="{$admin.id}" >删除</a>
                                             </td>
                                         </tr>
                                     {/volist}
@@ -71,23 +77,23 @@
 {include file="public/_js" /}
 <script>
     $(function () {
-        $('.article-top').click(function(){
+        $('.admin-status').click(function(){
             var id =$(this).attr('dataId');
-            var is_top =$(this).attr('isTop');
-            if(is_top == 1){
-                var msg = '确定取消推荐吗?';
+            var status =$(this).attr('isStatus');
+            if(status == 1){
+                var msg = '确定启动吗?';
             }else{
-                var msg = '确定推荐吗?';
+                var msg = '确定关闭吗?';
             }
             layer.confirm(msg,{
-                title:'推荐操作',
+                title:'状态操作',
                 icon:3
             },function (index) {
                 layer.close(index);
                 $.ajax({
-                    url:"{:url('admin/article/top')}",
+                    url:"{:url('admin/admin/status')}",
                     type:'post',
-                    data:{id:id,is_top:is_top},
+                    data:{id:id,status:status},
                     dataType:'json',
                     success:function(data){
                         if(data.code == 1){
@@ -110,15 +116,54 @@
             });
             return false;
         });
-        $('.article-del').click(function () {
+        $('.admin-super').click(function(){
+            var id =$(this).attr('dataId');
+            var is_super =$(this).attr('isSuper');
+            if(is_super == 1){
+                var msg = '确定开启超级管理吗?';
+            }else{
+                var msg = '确定关闭超级管理吗?';
+            }
+            layer.confirm(msg,{
+                title:'状态操作',
+                icon:3
+            },function (index) {
+                layer.close(index);
+                $.ajax({
+                    url:"{:url('admin/admin/super')}",
+                    type:'post',
+                    data:{id:id,is_super:is_super},
+                    dataType:'json',
+                    success:function(data){
+                        if(data.code == 1){
+                            layer.msg(data.msg,{
+                                icon:6,
+                                time:2000
+                            },function(){
+                                location.href = data.url;
+                            });
+                        }else{
+                            layer.open({
+                                title:"操作失败",
+                                content:data.msg,
+                                icon:5,
+                                anim:6
+                            })
+                        }
+                    }
+                });
+            });
+            return false;
+        });
+        $('.admin-del').click(function () {
             var id =$(this).attr('dataId');
             layer.confirm('确定要删除吗',{
-                    title:'删除文章',
+                    title:'删除管理员',
                     icon:3
                 },function (index) {
                     layer.close(index);
                     $.ajax({
-                        url:"{:url('admin/article/del')}",
+                        url:"{:url('admin/admin/del')}",
                         type:'post',
                         data:{id:id},
                         dataType:'json',
