@@ -6,7 +6,7 @@ class Member extends Base
 {
     public function lists(){
 
-        $members = model('Member')->order(['create_time'=>'desc'])->paginate(2);
+        $members = model('Member')->order(['create_time'=>'desc'])->paginate(5);
         $viewData =[
 
             'members' => $members
@@ -63,8 +63,8 @@ class Member extends Base
 
     public function del(){
 
-        $memberInfo = model('Member')->find(input('post.id'));
-        $result = $memberInfo -> delete();
+        $memberInfo = model('Member')->with('comments')->find(input('post.id'));
+        $result = $memberInfo -> together('comments') -> delete();
         if($result){
             $this->success('删除成功','admin/member/lists');
         }else{

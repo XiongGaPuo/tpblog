@@ -1,0 +1,57 @@
+{extend name="public/base"/}
+
+{block name="title"}
+    {$webInfo.webname}
+    {$catename|default=" "}
+{/block}
+
+
+{block name="head"}
+    {volist name="cates" id="cate"}
+    <li><a href="{:url('index/index/index',['id' => $cate.id])}">{$cate.catename}</a></li>
+    {/volist}
+{/block}
+
+{block name="content"}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="animated fadeInDown" style="text-shadow: none">XiongGaPuo</h1>
+        <p class="animated shake">XiongGaPuo是一个教学级博客系统，目前使用ThinkPHP5.1和Laravel5.5框架各开发一个，网站暂时只提供博文浏览功能，视频功能、留言功能、投稿功能、收益功能、推荐功能稍后开放。</p>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-8">
+            <div class="page-header h3">文章列表</div>
+            <div class="article-list">
+                {volist name="articles" id="article"}
+                <div class="article-list-item">
+                    <a href="{:url('index/article/info',['id'=>$article.id])}" class="title">{$article.title}</a>
+                    <div class="info">
+                        <span class="author">作者：{$article.admin.username}</span>-
+                        <span class="time">发布时间：{$article.create_time}</span>-
+                        <span class="read">阅读：{$article.click}</span>-
+                        <span class="comment">评论：{$article.comment_number}</span>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+            <nav class="">
+                <ul class="pagination">
+                    {$articles->render()|raw|replace}
+                </ul>
+            </nav>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div class="page-header h3">推荐文章</div>
+            <div class="topic-list">
+                {volist name="topArticles" id="topArticle"}
+                <div class="topic-list-item">
+                    <a href="{:url('index/article/info',['id'=>$topArticle.id])}" class="title">{$topArticle.title}</a>
+                </div>
+                {/volist}
+            </div>
+        </div>
+    </div>
+
+</div>
+{/block}
+

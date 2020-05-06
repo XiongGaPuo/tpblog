@@ -13,6 +13,11 @@ class Member extends Model
     //只读字段
     protected $readonly =['username','email'];
 
+    //关联评论 一对多
+    public function comments(){
+        return $this->hasMany('Comment','member_id','id');
+    }
+
     public function add($data){
         $validate = new \app\common\validate\Member();
         if(!$validate->scene('add')->check($data)){
@@ -45,4 +50,35 @@ class Member extends Model
 
 
     }
+
+    public function register($data){
+
+        $validate = new \app\common\validate\Member();
+        if(!$validate->scene('register')->check($data)){
+            return $validate->getError();
+        }
+        $result=$this->allowField(true)->save($data);
+        if($result == null){
+            return '注册失败';
+        }
+        return 1;
+    }
+
+    public function login($data){
+        $validate = new \app\common\validate\Member();
+        if(!$validate->scene('login')->check($data)){
+            return $validate->getError();
+        }
+
+        unset($data['verify']);
+        $result=$this->where($data)->find();
+        if ($result){
+            return 1;
+        }else{
+            return '账号密码错误';
+        }
+
+    }
+
+
 }

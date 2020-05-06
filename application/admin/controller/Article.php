@@ -8,7 +8,7 @@ class Article extends Base
 
     public function lists(){
 
-        $articles = model('Article')->with('cate')->order(['is_top'=> 'asc','create_time'=>'desc'])->paginate(1);
+        $articles = model('Article')->with('cate')->order(['is_top'=> 'asc','create_time'=>'desc'])->paginate(5);
         $viewData =[
             'articles' => $articles
         ];
@@ -19,13 +19,15 @@ class Article extends Base
 
     public function add(){
         if(request()->isAjax()){
+
             $data=[
                 'title' => input('post.title'),
                 'tags' => input('post.tags'),
                 'is_top' => input('post.is_top',0) ,
                 'cate_id' => input('post.cate_id'),
                 'desc' => input('post.desc'),
-                'content' => input('post.content')
+                'content' => input('post.content'),
+                'admin_id' => session('admin.id'),
             ];
             $result = model('Article')->add($data);
             if ($result == 1){
@@ -95,8 +97,8 @@ class Article extends Base
     public function del(){
 
 
-        $articleInfo =  model('Article')->find(input('post.id'));
-        $result=$articleInfo -> delete();
+        $articleInfo =  model('Article')->with('comments')->find(input('post.id'));
+        $result=$articleInfo -> together('comments') -> delete();
         if ($result){
             $this->success('删除成功','admin/article/lists');
         }else{

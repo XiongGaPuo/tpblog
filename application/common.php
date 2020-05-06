@@ -49,7 +49,7 @@ function mailto($to,$title,$content){
         $mail->Host       = 'smtp.163.com';                    // Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
         $mail->Username   = 'xionggapuo@163.com';                     // SMTP username
-        $mail->Password   = 'SIFIBVARCQXOMGSG';                               // SMTP password
+        $mail->Password   = 'SIFIBVARCQXOMGSG';                               // 必须填写授权码
         $mail->SMTPSecure = 'ssl';         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
         $mail->Port       = 465;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
@@ -73,4 +73,8 @@ function mailto($to,$title,$content){
 //把span字符串替换成a
 function replace($data){
     return str_replace('span','a',$data);
+}
+
+function strtoArray($data){
+    return explode('|',$data);
 }

@@ -9,6 +9,17 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+
+
+Route::rule('article/:id','index/article/info','get');
+Route::rule('cate/:id','index/index/index','get');
+Route::rule('/','index/index/index','get|post');
+Route::rule('register','index/index/register','get|post');
+Route::rule('login','index/index/login','get|post');
+Route::get('verify','index/verify');
+
+
+
 Route::group('admin',function(){
     Route::rule('/','admin/index/login','get|post');
     Route::rule('register','admin/index/register','get|post');
@@ -44,5 +55,10 @@ Route::group('admin',function(){
     Route::rule('admin/del','admin/admin/del','post');
     Route::rule('admin/super','admin/admin/super','post');
     Route::rule('admin/status','admin/admin/status','post');
+
+    Route::rule('comment/lists','admin/comment/lists','get');
+    Route::rule('comment/del','admin/comment/del','post|get');
+
+    Route::rule('system/set','admin/system/set','get|post');
 
 });

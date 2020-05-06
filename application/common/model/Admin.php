@@ -35,7 +35,7 @@ class Admin extends Model
                 'id' => $result['id'],
                 'nickname' => $result['nickname'],
                 'is_super' => $result['is_super'],
-                'is_super' => $result['email'],
+                'email' => $result['email'],
             ];
             session('admin',$sessionData);
             //1表示有这个用户,也就是用户名和密码正确了
