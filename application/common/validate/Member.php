@@ -23,7 +23,7 @@ class Member extends Validate
     public function sceneAdd(){
         return $this->only(['username','password','nickname','email'])->append([
             'username' => 'unique:member'
-        ]);
+        ])->remove([]);
     }
 
 

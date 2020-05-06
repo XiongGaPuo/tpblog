@@ -16,7 +16,9 @@ Route::rule('cate/:id','index/index/index','get');
 Route::rule('/','index/index/index','get|post');
 Route::rule('register','index/index/register','get|post');
 Route::rule('login','index/index/login','get|post');
-Route::get('verify','index/verify');
+Route::rule('out','index/index/out','get|post');
+Route::rule('search','index/index/search','get|post');
+Route::rule('comment','index/article/comment','get|post');
 
 
 

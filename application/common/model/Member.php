@@ -65,6 +65,7 @@ class Member extends Model
     }
 
     public function login($data){
+
         $validate = new \app\common\validate\Member();
         if(!$validate->scene('login')->check($data)){
             return $validate->getError();
@@ -73,9 +74,15 @@ class Member extends Model
         unset($data['verify']);
         $result=$this->where($data)->find();
         if ($result){
+            $sessionData=[
+                'id' => $result['id'],
+                'nickname' => $result['nickname'],
+            ];
+            session('index',$sessionData);
             return 1;
         }else{
             return '账号密码错误';
+
         }
 
     }

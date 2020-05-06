@@ -16,7 +16,7 @@
                 <div class="form-group">
                     <label for="verify" class="control-label">验证码</label>
                     <input type="text" class="form-control" id="verify" name="verify" placeholder="验证码" />
-                    <span class="input-group-addon"><img id="dataId" src="{:captcha_src()}" alt="验证码" onclick="javascript:this.src='{:captcha_src()}?rand='+Math.random()"></span>
+                    <span class="input-group-addon"><img id="dataId" src="{:captcha_src()}" onclick="javascript:this.src='{:captcha_src()}?rand='+Math.random()"  alt="验证码" ></span>
                 </div>
                 <div class="form-group">
                     <button id="login"  style="background-color:#101010; border-color:black;color: #9d9d9d" class="btn btn-primary btn-block">登录</button>
@@ -29,6 +29,10 @@
 
 {block name="js"}
 <script>
+    function refresh(){
+        var dataId = document.getElementById('dataId');
+        dataId.src = '/index/index/verify.html?' + 'rand=' + Math.random();
+    }
     $(function ( ) {
         $('#login').click(function () {
             $.ajax({

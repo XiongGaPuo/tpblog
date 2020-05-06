@@ -67,8 +67,22 @@ class Index extends Base
         return view();
     }
 
-    public function verify() {
-        $captcha = new Captcha();
-        return $captcha->entry(); 
+    public function out(){
+
+            session('index',null);
+            $this->redirect('index/index/login');
+
+    }
+
+    public function search(){
+        $catename = input('keyword');
+        $where[] =['title','like','%'.$catename.'%'];
+        $articles = model('Article')->where($where)->order('create_time','desc')->paginate(5);
+        $viewDate = [
+            'articles' => $articles,
+            'catename' =>$catename
+        ];
+        $this->assign($viewDate);
+        return view('index');
     }
 }
